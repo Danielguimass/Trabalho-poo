@@ -331,3 +331,53 @@ class ShopApp(ft.Column):
         except Exception as ex:
             self.show_snackbar(f"Erro ao adicionar ao carrinho: {ex}", ft.Colors.RED_500)
         self.page.update()
+    def show_comprar_produto(self, e):
+        products = listar_produtos()
+
+        products_display_controls = [
+            ft.Text("Produtos Disponíveis:", size=20, weight=ft.FontWeight.BOLD)
+        ]
+
+        if products:
+            data_table_rows = []
+            for p in products:
+                data_table_rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(p[0]))),  # ID
+                            ft.DataCell(ft.Text(p[1])),  # Nome
+                            ft.DataCell(ft.Text(f"R${p[2]:.2f}")),  # Preço formatado
+                        ]
+                    )
+                )
+
+            products_display_controls.append(
+                ft.DataTable(
+                    columns=[
+                        ft.DataColumn(ft.Text("ID")),
+                        ft.DataColumn(ft.Text("Nome")),
+                        ft.DataColumn(ft.Text("Preço")),
+                    ],
+                    rows=data_table_rows,
+                    heading_row_color=ft.Colors.BLUE_GREY_100,
+                    border=ft.border.all(1, ft.Colors.GREY),
+                    border_radius=ft.border_radius.all(8),
+                    vertical_lines=ft.BorderSide(1, ft.Colors.GREY),
+                    horizontal_lines=ft.BorderSide(1, ft.Colors.GREY),
+                    sort_column_index=0,
+                    sort_ascending=True,
+                )
+            )
+        else:
+            products_display_controls.append(ft.Text("Nenhum produto cadastrado ainda."))
+        content = [
+            ft.Text("Comprar Produto", size=30, weight=ft.FontWeight.BOLD),
+            ft.Column(products_display_controls, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10, expand=True), # Agrupa a lista de produtos
+            ft.Divider(), # Adiciona um divisor para separar a lista do input
+            ft.Text("Digite o ID do produto para adicionar ao carrinho:"),
+            self.buy_product_id_input, # Usa o input já inicializado
+            ft.ElevatedButton("Adicionar ao Carrinho", on_click=self.add_product_to_cart), # Chama o novo método
+            ft.TextButton("Voltar ao Menu", on_click=self.show_main_menu)
+        ]
+        self._update_page_content(content)
+
