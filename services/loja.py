@@ -26,11 +26,11 @@ IMAGE_DIR = "product_images"
 
 
 class ShopApp(ft.Column):
-    def __init__(self, page: ft.Page, snackbar_text: ft.Text):
+    def __init__(self, page: ft.Page):
         super().__init__()
         self.page = page
         self.page.clean()
-        self.snackbar_text = snackbar_text
+
 
         self.page.appbar = ft.AppBar(
             title=ft.Text("POO Shop - Loja Virtual", weight=ft.FontWeight.BOLD),
@@ -97,8 +97,11 @@ class ShopApp(ft.Column):
         self._update_page_content(menu_content)
 
     def show_snackbar(self, message: str, color=ft.Colors.GREEN_500):
-        self.snackbar_text.value = message
-        self.page.snack_bar.bgcolor = color
+        self.page.snack_bar = ft.SnackBar(
+            ft.Text(message),
+            bgcolor=color,
+            duration=2000,
+        )
         self.page.snack_bar.open = True
         self.page.update()
 
@@ -288,7 +291,13 @@ class ShopApp(ft.Column):
                     )
                 )
         else:
-            product_rows.append(ft.DataRow(cells=[ft.DataCell(ft.Text("Nenhum produto cadastrado.", col_span=6))]))
+            product_rows.append(
+                ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text("Nenhum produto cadastrado."), col_span=6)
+                    ]
+                )
+            )
 
         products_table = ft.DataTable(
             columns=[
@@ -314,16 +323,14 @@ class ShopApp(ft.Column):
         ]
         self._update_page_content(content)
 
-
-
     def add_product_to_cart(self, e):
         try:
-            product_id = int(self.buy_product_id_input.value) # Usa o TextField inicializado
+            product_id = int(self.buy_product_id_input.value)
             product = pegar_produto_por_id(product_id)
             if product:
                 adicionar_ao_carrinho(product[0])
                 self.show_snackbar(f"Produto '{product[1]}' adicionado ao carrinho!", ft.Colors.GREEN_600)
-                self.buy_product_id_input.value = "" # Limpa o campo
+                self.buy_product_id_input.value = ""
             else:
                 self.show_snackbar("Produto não encontrado.", ft.Colors.RED_500)
         except ValueError:
@@ -332,7 +339,7 @@ class ShopApp(ft.Column):
             self.show_snackbar(f"Erro ao adicionar ao carrinho: {ex}", ft.Colors.RED_500)
         self.page.update()
 
-    # --- FUNÇÃO show_comprar_produto REESTRUTURADA ---
+
     def show_comprar_produto(self, e):
         products = listar_produtos()
 
@@ -348,7 +355,7 @@ class ShopApp(ft.Column):
                         cells=[
                             ft.DataCell(ft.Text(str(p[0]))),  # ID
                             ft.DataCell(ft.Text(p[1])),  # Nome
-                            ft.DataCell(ft.Text(f"R${p[2]:.2f}")),  # Preço formatado
+                            ft.DataCell(ft.Text(f"R${p[2]:.2f}")),
                         ]
                     )
                 )

@@ -57,12 +57,12 @@ def pegar_produto_por_id(produto_id: int):
 def adicionar_ao_carrinho(produto_id: int):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute('SELECT id FROM carrinho WHERE produto_id = ?', (produto_id,))
+    cursor.execute('SELECT id_produto FROM carrinho WHERE id_produto = ?', (produto_id,))
     item = cursor.fetchone()
     if item:
-        cursor.execute('UPDATE carrinho SET quantidade = quantidade + 1 WHERE produto_id = ?', (produto_id,))
+        cursor.execute('UPDATE carrinho SET quantidade = quantidade + 1 WHERE id_produto = ?', (produto_id,))
     else:
-        cursor.execute('INSERT INTO carrinho (produto_id, quantidade) VALUES (?, ?)', (produto_id, 1))
+        cursor.execute('INSERT INTO carrinho (id_produto, quantidade) VALUES (?, ?)', (produto_id, 1))
     conn.commit()
     conn.close()
 
@@ -72,7 +72,7 @@ def listar_carrinho():
     cursor.execute('''
         SELECT p.id, p.nome, p.preco, p.tipo, p.detalhe, c.quantidade 
         FROM carrinho c 
-        JOIN produtos p ON c.produto_id = p.id
+        JOIN produtos p ON c.id_produto = p.id
     ''')
     dados = cursor.fetchall()
     conn.close()
