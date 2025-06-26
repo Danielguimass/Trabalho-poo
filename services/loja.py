@@ -339,6 +339,10 @@ class ShopApp(ft.Column):
             self.show_snackbar(f"Erro ao adicionar ao carrinho: {ex}", ft.Colors.RED_500)
         self.page.update()
 
+    def clear_cart(self, e):
+        limpar_carrinho()
+        self.show_snackbar("Carrinho limpo com sucesso!", ft.Colors.GREEN_500)
+        self.show_visualizar_carrinho(None)
 
     def show_comprar_produto(self, e):
         products = listar_produtos()
@@ -435,7 +439,10 @@ class ShopApp(ft.Column):
                 ft.Text("Carrinho vazio.", size=16, color=ft.Colors.GREY_700),
             ]
 
-        content.append(ft.ElevatedButton("Voltar ao Menu", on_click=self.show_main_menu))
+        content.extend([
+            ft.ElevatedButton("Limpar Carrinho", on_click=self.clear_cart,style=ft.ButtonStyle(bgcolor=ft.Colors.RED_400)),
+            ft.ElevatedButton("Voltar ao Menu", on_click=self.show_main_menu)
+        ])
         self._update_page_content(content)
 
     def show_fechar_pedido(self, e):
