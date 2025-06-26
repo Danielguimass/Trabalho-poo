@@ -627,7 +627,7 @@ class ShopApp(ft.Column):
                 self.show_snackbar("Valor inválido. Digite um número.", ft.Colors.RED_500)
             self.page.update()
 
-        # Remova 'await self.page.run_async(lambda: ...)'
+
         self._update_page_content(
             [
                 ft.Text("--- SIMULAÇÃO DE PAGAMENTO VIA DINHEIRO ---", size=20, weight=ft.FontWeight.BOLD),
